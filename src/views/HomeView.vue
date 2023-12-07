@@ -1,6 +1,7 @@
 <template>
-  <div class="home">
+  <div class="container">
     <img alt="Vue logo" src="../assets/logo.png" />
+    <h1>Version 1.0</h1>
     <div v-if="showInstallPopup" class="install-popup">
       <div class="install-popup-content">
         <p>Do you want to install this app?</p>
@@ -14,8 +15,10 @@
       <router-link to="/registration" class="btn btn-primary">Register</router-link>
     </div>
     {{ users }}
-    <button class="btn btn-primary" @click="subscribeForNotifications">Subscribe for Notifications</button>
-    <button class="btn btn-primary" @click="getNoti">Push Data to Api</button>
+    <div class="d-flex gap-2 align-items-center">
+      <button class="btn btn-primary" @click="subscribeForNotifications">Subscribe for Notifications</button>
+      <button class="btn btn-primary" @click="getNoti">Push Data to Api</button>
+    </div>
   </div>
 </template>
 
