@@ -48,7 +48,7 @@ export default {
   mounted() {
     const token = localStorage.getItem('token');
 
-    axios.get('https://pwa.clobug.co.in/api/user', {
+    axios.get('https://pwanew.clobug.co.in/api/user', {
       headers: { "Authorization": `Bearer ${token}` }
     }).then((response) => {
       this.users = response.data
@@ -149,7 +149,7 @@ export default {
         headers: { "Authorization": `Bearer ${token}` }
       };
 
-      axios.post('https://pwa.clobug.co.in/api/push_store', data, config)
+      axios.post('https://pwanew.clobug.co.in/api/push_store', data, config)
         .then((response) => {
           console.log('data sent', response);
         })

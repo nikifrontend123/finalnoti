@@ -71,7 +71,7 @@ export default {
     },
     methods: {
         loginAccount() {
-            axios.post('https://pwa.clobug.co.in/api/login', {
+            axios.post('https://pwanew.clobug.co.in/api/login', {
                 email: this.email,
                 password: this.password
             }).then((response) => {
