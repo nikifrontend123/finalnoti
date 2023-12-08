@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <img alt="Vue logo" src="../assets/logo.png" />
-    <h1>Version 1.</h1>
+    <h1>Version 1.2</h1>
     <div v-if="showInstallPopup" class="install-popup">
       <div class="install-popup-content">
         <p>Do you want to install this app?</p>
@@ -47,16 +47,18 @@ export default {
   },
   mounted() {
     const token = localStorage.getItem('token');
-
-    axios.get('https://pwanew.clobug.co.in/api/user', {
-      headers: { "Authorization": `Bearer ${token}` }
-    }).then((response) => {
-      this.users = response.data
-      console.log(response.data)
-    })
-      .catch((error) => {
-        console.error(error)
+    if (token) {
+      
+      axios.get('https://pwanew.clobug.co.in/api/user', {
+        headers: { "Authorization": `Bearer ${token}` }
+      }).then((response) => {
+        this.users = response.data
+        console.log(response.data)
       })
+        .catch((error) => {
+          console.error(error)
+        })
+    }
   },
   methods: {
     handleInstallPrompt(event) {
