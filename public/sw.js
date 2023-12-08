@@ -19,7 +19,7 @@ self.addEventListener('push', function (e) {
 
 self.addEventListener('notificationclick', function (event) {
     // Define the URL to open when the notification is clicked
-    var url = 'https://clobug.co.in';
+    var url = 'https://www.flipkart.com/';
 
     event.notification.close(); // Close the notification
 
