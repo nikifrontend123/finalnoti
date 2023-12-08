@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <img alt="Vue logo" src="../assets/logo.png" />
-    <h1>Version 1.2.1</h1>
+    <h1>Version 1.2.2</h1>
     <div v-if="showInstallPopup" class="install-popup">
       <div class="install-popup-content">
         <p>Do you want to install this app?</p>

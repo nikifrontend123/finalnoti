@@ -18,11 +18,8 @@ register(`${process.env.BASE_URL}sw.js`, {
           registration.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: 'BHaGoupz6SaaiUM6EOTtsVSVjAklaOV3Y4lmexYmEV7XwDDiA4LkPLfqmvpaF4FcyyHEZ2LvLQUp9sHpuW0K96s'
-          }).then(function (newSubscription) {
+          }).then(newSubscription => {
             console.log('Push subscription successful:', newSubscription);
-            localStorage.setItem('p256dhKey', newSubscription.keys.p256dh);
-            localStorage.setItem('endpoint', newSubscription.endpoint);
-            localStorage.setItem('authKey', newSubscription.keys.auth);
           }).catch(error => {
             console.error('Error subscribing to push notifications:', error);
           });
