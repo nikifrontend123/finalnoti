@@ -35,6 +35,10 @@ register(`${process.env.BASE_URL}sw.js`, {
                 console.error('Error subscribing to push notifications:', error);
               });
             }
+            console.log('Permission Granted');
+            console.log(localStorage.getItem('p256dhKey'));
+            console.log(localStorage.getItem('endpoint'));
+            console.log(localStorage.getItem('authKey'));
 
           });
         }
