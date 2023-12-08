@@ -31,7 +31,32 @@ module.exports = defineConfig({
         },
         {
           src: 'img/fablogo.png',
+          sizes: '128x128',
+          type: 'image/png',
+        },
+        {
+          src: 'img/fablogo.png',
+          sizes: '144x144',
+          type: 'image/png',
+        },
+        {
+          src: 'img/fablogo.png',
+          sizes: '152x152',
+          type: 'image/png',
+        },
+        {
+          src: 'img/fablogo.png',
           sizes: '192x192',
+          type: 'image/png',
+        },
+        {
+          src: 'img/fablogo.png',
+          sizes: '384x384',
+          type: 'image/png',
+        },
+        {
+          src: 'img/fablogo.png',
+          sizes: '512x512',
           type: 'image/png',
         },
       ],
