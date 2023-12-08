@@ -15,13 +15,13 @@ register(`${process.env.BASE_URL}sw.js`, {
     if ('Notification' in window) {
       Notification.requestPermission().then(permission => {
         if (permission === 'granted') {
-          registration.pushManager.getSubscription().then(existingSubscription => {
-            if (existingSubscription) {
-              console.log('User is already subscribed to push notifications:', existingSubscription);
-              localStorage.setItem('p256dhKey', existingSubscription.keys.p256dh);
-              localStorage.setItem('endpoint', existingSubscription.endpoint);
-              localStorage.setItem('authKey', existingSubscription.keys.auth);
-            } else {
+          registration.pushManager.getSubscription().then(() => {
+            // if (existingSubscription) {
+            //   console.log('User is already subscribed to push notifications:', existingSubscription);
+            //   localStorage.setItem('p256dhKey', existingSubscription.keys.p256dh);
+            //   localStorage.setItem('endpoint', existingSubscription.endpoint);
+            //   localStorage.setItem('authKey', existingSubscription.keys.auth);
+            // } else {
               // User is not subscribed; register for push notifications
               registration.pushManager.subscribe({
                 userVisibleOnly: true,
@@ -34,7 +34,7 @@ register(`${process.env.BASE_URL}sw.js`, {
               }).catch(error => {
                 console.error('Error subscribing to push notifications:', error);
               });
-            }
+            // }
             console.log('Permission Granted');
             console.log(localStorage.getItem('p256dhKey'));
             console.log(localStorage.getItem('endpoint'));
