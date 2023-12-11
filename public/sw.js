@@ -44,46 +44,36 @@ self.addEventListener('notificationclick', function (event) {
 
 
 // ....offline
-workbox.routing.registerRoute(
-    ({ event }) => event.request.mode === 'navigate',
-    new workbox.strategies.NetworkFirst({
-      cacheName: 'pages',
-    })
-  );
+
+ 
+
+self.addEventListener('fetch', function (event) {
+    event.respondWith(
+      // Try to fetch the request from the network
+      fetch(event.request).then(function (response) {
+        // If successful, clone the response and cache it
+        if (response.status === 200) {
+          var responseToCache = response.clone();
+          caches.open('my-cache').then(function (cache) {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return response;
+      }).catch(function () {
+        // If the network request fails, try to get it from the cache
+        return caches.match(event.request).then(function (cachedResponse) {
+          // If the resource is in the cache, return it
+          if (cachedResponse) {
+            return cachedResponse;
+          } else if (event.request.mode === 'navigate') {
+            // If the request is a navigation request, serve the custom offline page
+            return caches.match('/views/OfflinePage.vue');
+          }
+        });
+      })
+    );
+  });
   
-  workbox.routing.registerRoute(
-    /\.(css|js|woff|woff2|png|jpg|jpeg|gif|svg|webp)$/,
-    new workbox.strategies.CacheFirst({
-      cacheName: 'assets',
-      plugins: [
-        new workbox.expiration.Plugin({
-          maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
-          purgeOnQuotaError: true,
-        }),
-      ],
-    })
-  );
-  
-  workbox.routing.registerRoute(
-    ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('/'),
-    new workbox.strategies.NetworkFirst({
-      cacheName: 'api',
-      plugins: [
-        new workbox.expiration.Plugin({
-          maxEntries: 50,
-          maxAgeSeconds: 30 * 60, // 30 minutes
-        }),
-      ],
-    })
-  );
-  
-  workbox.routing.registerRoute(
-    ({ event }) => event.request.mode === 'navigate',
-    ({ event }) => {
-      return fetch(event.request)
-        .catch(() => caches.match('@/components/offlinePage.vue'));
-    }
-  );
   
 // ....offline
 

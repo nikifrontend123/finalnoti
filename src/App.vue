@@ -8,7 +8,7 @@
   <router-view v-if="!offline" />
 </template>
 <script>
-import OfflinePage from './components/OfflinePage.vue';
+import OfflinePage from './views/OfflinePage.vue';
 export default {
   data() {
     return {
