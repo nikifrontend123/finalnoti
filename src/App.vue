@@ -1,11 +1,36 @@
+
 <template>
   <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
+    <OfflinePage v-if="offline"></OfflinePage>
   </nav>
-  <router-view />
+  <router-view v-if="!offline" />
 </template>
-
+<script>
+import OfflinePage from './components/OfflinePage.vue';
+export default {
+  data() {
+    return {
+      offline: !navigator.onLine,
+    };
+  },
+  created() {
+    window.addEventListener('online', this.updateOnlineStatus);
+    window.addEventListener('offline', this.updateOnlineStatus);
+  },
+  unmounted() {
+    window.removeEventListener('online', this.updateOnlineStatus);
+    window.removeEventListener('offline', this.updateOnlineStatus);
+  },
+  methods: {
+    updateOnlineStatus() {
+      this.offline = !navigator.onLine;
+    },
+  },
+  components: { OfflinePage }
+};
+</script>
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
