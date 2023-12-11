@@ -28,7 +28,7 @@
         </div>
         <div class=" d-flex flex-column justify-content-center align-items-center pt-3">
           <h1 class="text-center text-white mt-3">India's largest B2B Platform for <br> businesses & shop-owners</h1>
-          <RouterLink to="/LoginPage">
+          <RouterLink to="/test">
             <div class="btn btn-light text-danger my-4 fs-5">
               Register <i class="bi bi-arrow-right"></i>
             </div>
