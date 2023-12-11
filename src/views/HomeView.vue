@@ -2,6 +2,13 @@
   <div class="container">
     <img alt="Vue logo" src="../assets/logo.png" />
     <h1>Version 1.2.3</h1>
+    <div class="container my-5 py-3">
+      <h5 v-if="userLocation">
+        User Coordinate: {{ userLocation.latitude }}, {{ userLocation.longitude }}
+      </h5>
+    </div>
+    <GeoPrompt v-if="!locationPermissionGranted" @geolocationAllowed="handleGeolocationAllowed"
+      @closeGeoPrompt="closeCustomGeoPrompt" />
     <div v-if="showInstallPopup" class="install-popup">
       <div class="install-popup-content">
         <p>Do you want to install this app?</p>
@@ -24,12 +31,14 @@
 
 <script>
 // @ is an alias to /src
+import GeoPrompt from "@/components/GeoPrompt.vue";
 import HelloWorld from "@/components/HelloWorld.vue";
 import axios from "axios";
 export default {
   name: "HomeView",
   components: {
     HelloWorld,
+    GeoPrompt
   },
   data() {
     return {
@@ -37,6 +46,8 @@ export default {
       showInstallButton: false,
       showInstallPopup: false,
       users: null,
+      userLocation: null,
+      customPromptClosed: false,
     };
   },
   created() {
@@ -48,7 +59,7 @@ export default {
   mounted() {
     const token = localStorage.getItem('token');
     if (token) {
-      
+
       axios.get('https://pwanew.clobug.co.in/api/user', {
         headers: { "Authorization": `Bearer ${token}` }
       }).then((response) => {
@@ -59,6 +70,12 @@ export default {
           console.error(error)
         })
     }
+    
+    const geoPrompt = this.$refs.geoPrompt;
+    if (geoPrompt && !geoPrompt.isLocationPermissionGranted) {
+      geoPrompt.openLocationPopup();
+    }
+    this.getUserLocation();
   },
   methods: {
     handleInstallPrompt(event) {
@@ -153,7 +170,40 @@ export default {
         .catch((error) => {
           console.error('error sending data', error);
         });
-    }
+    },
+    getUserLocation() {
+      if (navigator.permissions) {
+        navigator.permissions.query({ name: "geolocation" }).then((result) => {
+          if (result.state === "granted") {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                const { latitude, longitude } = position.coords;
+                this.userLocation = { latitude, longitude };
+                console.log("User Location:", this.userLocation); // Add this line for debugging
+                this.showLocationPopup = false;
+                this.$emit("geolocationAllowed", this.userLocation);
+              },
+              (error) => {
+                console.error(`Error getting location: ${error.message}`);
+                this.showLocationPopup = false;
+              },
+              {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0,
+              }
+            );
+          } else {
+            console.error("Geolocation permission not granted.");
+            this.showLocationPopup = false;
+            this.$emit("geolocationDenied");
+          }
+        });
+      } else {
+        console.error("Geolocation is not supported by your browser");
+        this.showLocationPopup = false;
+      }
+    },
   }
 };
 </script>
