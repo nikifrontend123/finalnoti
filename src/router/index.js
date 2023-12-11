@@ -11,7 +11,7 @@ const routes = [
     path: "/",
     name: "offline",
     component: () =>
-      import("../views/OfflinePage.vue"),
+      import("../views/OfflinePage.vue"), 
   },
   {
     path: "/about",
