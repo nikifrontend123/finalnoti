@@ -7,8 +7,7 @@
         User Coordinate: {{ userLocation.latitude }}, {{ userLocation.longitude }}
       </h5>
     </div>
-    <GeoPrompt v-if="!locationPermissionGranted" @geolocationAllowed="handleGeolocationAllowed"
-      @closeGeoPrompt="closeCustomGeoPrompt" />
+    <GeoPrompt v-if="!locationPermissionGranted" />
     <div v-if="showInstallPopup" class="install-popup">
       <div class="install-popup-content">
         <p>Do you want to install this app?</p>
@@ -48,10 +47,13 @@ export default {
       users: null,
       userLocation: null,
       customPromptClosed: false,
+      locationPermissionGranted: false,
     };
   },
   created() {
     window.addEventListener('beforeinstallprompt', this.handleInstallPrompt);
+
+    this.checkGeolocationPermission();
   },
   unmounted() {
     window.removeEventListener('beforeinstallprompt', this.handleInstallPrompt);
@@ -70,7 +72,7 @@ export default {
           console.error(error)
         })
     }
-    
+
     const geoPrompt = this.$refs.geoPrompt;
     if (geoPrompt && !geoPrompt.isLocationPermissionGranted) {
       geoPrompt.openLocationPopup();
@@ -202,6 +204,20 @@ export default {
       } else {
         console.error("Geolocation is not supported by your browser");
         this.showLocationPopup = false;
+      }
+    },
+    checkGeolocationPermission() {
+      if (navigator.permissions) {
+        navigator.permissions.query({ name: 'geolocation' })
+          .then((result) => {
+            if (result.state === 'granted') {
+              this.locationPermissionGranted = true;
+              this.getUserLocation();
+            }
+          })
+          .catch((error) => {
+            console.error(`Error checking geolocation permission: ${error.message}`);
+          });
       }
     },
   }

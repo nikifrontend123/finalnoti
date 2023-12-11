@@ -22,11 +22,6 @@
       this.checkLocationPermission();
     },
     methods: {
-      openLocationPopup() {
-        if (!this.isLocationPermissionGranted) {
-          this.showLocationPopup = true;
-        }
-      },
       allowLocation() {
         this.getLocation();
       },
@@ -54,7 +49,7 @@
             },
             {
               enableHighAccuracy: true,
-              timeout: 5000,
+              timeout: 2000,
               maximumAge: 0,
             }
           );
