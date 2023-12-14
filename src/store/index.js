@@ -684,6 +684,7 @@ export default createStore({
       { image: 'img/brand/legsUp.png', width: '60%' },
       { image: 'img/brand/underGears.png', width: '60%' },
     ],
+    test:[]
   },
   getters: {
     getCollections(state) {
@@ -701,6 +702,9 @@ export default createStore({
     getReviews(state) {
       return state.reviews;
     },
+    getTest(state){
+      return state.test
+    }
   },
   mutations: {
     toggleReview(state, review) {
@@ -710,11 +714,17 @@ export default createStore({
       });
       state.reviews[index].show = true
     },
+    setData(state, data){
+      state.test = data
+    }
   },
   actions: {
     toggleReview({ commit }, review) {
       commit("toggleReview", review);
     },
+    setData({commit}, data){
+      commit('setData', data)
+    }
   },
   modules: {},
 });

@@ -1,4 +1,21 @@
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-sw.js");
+const CACHE_NAME = 'v5';
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker Activated');
+  event.waitUntil(
+    // Clear old caches here
+    caches.keys().then((cacheNames) => {
+      console.log('Existing Caches:', cacheNames);
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Deleting Cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
 
 self.addEventListener('push', function (e) {
   console.log('inside')
@@ -42,39 +59,57 @@ self.addEventListener('notificationclick', function (event) {
   );
 });
 
-
 // ....offline
 
-
-
 self.addEventListener('fetch', (event) => {
+  console.log('hello');
   event.respondWith(
-    // Try to fetch the request from the network
-    fetch(event.request).then(function (response) {
-      // If successful, clone the response and cache it
-      if (response.status === 200) {
-        var responseToCache = response.clone();
-        caches.open('my-new').then(function (cache) {
-          cache.add(event.request, responseToCache);
-        });
-      }
-      return response;
-    }).catch(async (error) => {
-      console.log(error);
-      // If the network request fails, try to get it from the cache
-      const cachedResponse = await caches.match(event.request);
-      // If the resource is in the cache, return it
-      if (cachedResponse) {
-        return cachedResponse;
-      } else if (event.request.mode === 'navigate') {
-        // If the request is a navigation request, serve the custom offline page
-        return caches.match('/views/OfflinePage.vue');
-      }
-    })
+    fetch(event.request)
+      .then(function (response) {
+        console.log('inside fetch in service worker', event.request);
+
+        if (response.status === 200) {
+          var responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(function (cache) {
+            // Use cache.put to associate the request with the response
+            cache.put(event.request, responseToCache);
+          });
+        }
+
+        return response;
+      })
+      .catch(async (error) => {
+        console.log(error);
+
+        const cachedResponse = await caches.match(event.request);
+
+        if (cachedResponse) {
+          return cachedResponse;
+        } else if (event.request.mode === 'navigate') {
+          return caches.match('/views/OfflinePage.vue');
+        }
+      })
   );
 });
 
 
 // ....offline
 
+ // cache delete
 
+// self.addEventListener('activate', (event) => {
+//   event.waitUntil(
+//     // Clear old caches here
+//     caches.keys().then((cacheNames) => {
+//       console.log('cache File')
+//       return Promise.all(
+//         cacheNames.map((cacheName) => {
+//           if (cacheName !== CACHE_NAME) {
+//             return caches.delete(cacheName);
+//           }
+//         })
+//       );
+//     })
+//   );
+// });
+// cache delete

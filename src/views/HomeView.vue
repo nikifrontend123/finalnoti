@@ -26,6 +26,14 @@
       <button class="btn btn-primary" @click="getNoti">Push Data to Api</button>
     </div>
   </div>
+
+  <button @click="callApi">Random Data</button>
+
+  <div v-for="(d, index) in data" :key="index" class="">
+    <!-- {{ d.avatar}} -->
+    <img v-if="d.avatar" :src="d.avatar" style="height: 100px; width: 100px;">
+
+  </div>
 </template>
 
 <script>
@@ -48,8 +56,10 @@ export default {
       userLocation: null,
       customPromptClosed: false,
       locationPermissionGranted: false,
+      data: null
     };
   },
+ 
   created() {
     window.addEventListener('beforeinstallprompt', this.handleInstallPrompt);
 
@@ -220,6 +230,12 @@ export default {
           });
       }
     },
+    callApi() {
+      axios.get('https://random-data-api.com/api/v2/users?size=2&is_xml=true')
+        .then((response) => {
+          this.data = response.data
+        })
+    }
   }
 };
 </script>

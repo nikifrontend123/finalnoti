@@ -1,6 +1,16 @@
 <template>
   <div>
-    <h1>Helo Brather BRather</h1>
+    <div>
+      <button @click="fetchChar">Get Characters</button>
+      <h2>Characters:</h2>
+
+      <div v-for="(data, index) in datasP" :key="index" class="">
+        <img :src="data.avatar" style="height: 100px; width: 100px;">
+      </div>
+    </div>
+
+
+
     <!-- ---------------------TOP-NAV----------------------- -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
@@ -29,10 +39,10 @@
       </div>
       <div class=" d-flex flex-column justify-content-center align-items-center pt-3">
         <h1 class="text-center text-white mt-3">India's largest B2B Platform for <br> businesses & shop-owners</h1>
-        <RouterLink to="/test" >
-        <div class="btn btn-light text-danger my-4 fs-5" @click="showOfflineAlert">
-          Register <i class="bi bi-arrow-right"></i>
-        </div>
+        <RouterLink to="/test">
+          <div class="btn btn-light text-danger my-4 fs-5" @click="showOfflineAlert">
+            Register <i class="bi bi-arrow-right"></i>
+          </div>
         </RouterLink>
 
         <div v-if="offline" class="install-popup">
@@ -65,7 +75,8 @@
             </div>
             <div class="">
               <h3><span class="text-danger opacity-75"> Trending </span> Products Wide <span
-                  class="text-danger opacity-75"> Range</span></h3>
+                  class="text-danger opacity-75">
+                  Range</span></h3>
               <p>Shop 1,000+ trending products across all categories</p>
             </div>
             <div class=" ">
@@ -251,12 +262,13 @@
     <!-- ------------------------bottom------------------ -->
   </div>
 </template>
-  
+
 <script>
 import AutoCounter from '@/components/maincomp/AutoCounter.vue';
 import BottomComp from '@/components/maincomp/BottomComp.vue';
 import CollectionPage from '@/components/maincomp/CollectionPage.vue';
 import UserBanner from '@/components/maincomp/UserBanner.vue';
+import axios from 'axios';
 
 export default {
   name: "HomeView",
@@ -283,7 +295,8 @@ export default {
           text: 'Browse and order products for your shop from top sellers & brands'
         },
       ],
-      offline: false
+      offline: false,
+      data: null
     }
   },
   components: {
@@ -296,6 +309,9 @@ export default {
     brands() {
       return this.$store.getters.getBrands
     },
+    datasP() {
+      return this.$store.getters.getTest
+    }
   },
   methods: {
     showOfflineAlert() {
@@ -305,6 +321,13 @@ export default {
     },
     dismissOffline() {
       this.offline = false
+    },
+    fetchChar() {
+      const charUrl = 'https://random-data-api.com/api/v2/users?size=2&is_xml=true';
+      axios.get(charUrl).then(res => {
+        this.$store.dispatch('setData', res.data)
+        // this.data = res.data
+      })
     }
   }
 };
@@ -340,8 +363,6 @@ export default {
     }
   }
 
-
-  // Styling
   .slider {
     background-color: white;
     box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .125);
